@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Nexus Logistics | Global Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="sidebar">
+      <img src="NexuesLogo.png" alt="Nexus Logo" class="app-logo" />
+      <div class="warehouse-info">
+        <span>ACTIVE MANAGER</span>
+        <p id="manager-display">Verifying...</p>
+      </div>
+      <nav>
+        <a
+          href="#"
+          id="link-inventory"
+          class="active"
+          onclick="showPage('inventory')"
+          >📦 Inventory Stock</a
+        >
+        <a href="#" id="link-hubs" onclick="showPage('hubs')"
+          >🏭 Warehouse Hubs</a
+        >
+        <a href="#" id="link-analytics" onclick="showPage('analytics')"
+          >📊 Analytics</a
+        >
+        <a href="#" id="link-config" onclick="showPage('config')"
+          >⚙️ System Config</a
+        >
+        <a href="login.html" style="margin-top: 50px; color: #ff4d4d"
+          >🚪 Sign Out</a
+        >
+      </nav>
+    </div>
+
+    <div class="main">
+      <header>
+        <h1 id="page-title">Inventory Stock</h1>
+        <div id="status-indicator">HUB SYNCHRONIZED</div>
+      </header>
+
+      <!-- SECTION 1: INVENTORY -->
+      <div id="view-inventory" class="content-section">
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Product Name</th>
+                <th>Stock</th>
+                <th>Category</th>
+                <th>Condition</th>
+              </tr>
+            </thead>
+            <tbody id="inventory-table"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 2: HUBS (Bridge Pattern View) -->
+      <div id="view-hubs" class="content-section" style="display: none">
+        <div class="grid-container">
+          <div class="hub-card">
+            <h3>Cairo Central Hub</h3>
+            <span class="storage-tag">Condition: Standard</span>
+            <p>Primary distribution center for North Africa.</p>
+          </div>
+          <div class="hub-card">
+            <h3>Alexandria Port</h3>
+            <span class="storage-tag">Condition: High-Security</span>
+            <p>International shipping and receiving gateway.</p>
+          </div>
+          <div class="hub-card">
+            <h3>Giza Logistics Park</h3>
+            <span class="storage-tag">Condition: Cold Storage</span>
+            <p>Specialized handling for temperature-sensitive items.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: ANALYTICS -->
+      <div id="view-analytics" class="content-section" style="display: none">
+        <div class="stats-grid">
+          <div class="stat-box">
+            <small>TOTAL SKU ITEMS</small>
+            <h2 id="stat-total">0</h2>
+          </div>
+          <div class="stat-box" style="border-bottom: 4px solid #ff4d4d">
+            <small>LOW STOCK ALERTS</small>
+            <h2 id="stat-low">0</h2>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4: CONFIG -->
+      <div id="view-config" class="content-section" style="display: none">
+        <div class="table-container">
+          <h3>Global System Variables</h3>
+          <p>Managed via <b>Singleton Pattern</b> across all instances.</p>
+          <div class="config-row">
+            <span>Currency:</span> <strong>USD / EGP</strong>
+          </div>
+          <div class="config-row">
+            <span>Base Tax Rate:</span> <strong>14%</strong>
+          </div>
+          <div class="config-row">
+            <span>Cloud Persistence:</span>
+            <strong style="color: var(--accent-teal)">Firebase Active</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // PAGE SWAPPING LOGIC (OCP PRINCIPLE)
+      function showPage(pageId) {
+        // Hide all
+        document
+          .querySelectorAll(".content-section")
+          .forEach((s) => (s.style.display = "none"));
+        document
+          .querySelectorAll("nav a")
+          .forEach((a) => a.classList.remove("active"));
+        // Show selected
+        document.getElementById("view-" + pageId).style.display = "block";
+        document.getElementById("link-" + pageId).classList.add("active");
+        // Update Title
+        const titles = {
+          inventory: "Inventory Stock",
+          hubs: "Warehouse Hubs",
+          analytics: "System Analytics",
+          config: "System Configuration",
+        };
+        document.getElementById("page-title").innerText = titles[pageId];
+
+        if (pageId === "analytics") runAnalytics();
+      }
+
+      async function initialize() {
+        // 1. Session Check (Singleton)
+        const auth = await fetch("/api/auth/session");
+        const boss = await auth.json().catch(() => null);
+        if (!boss) {
+          window.location.href = "login.html";
+          return;
+        }
+        document.getElementById("manager-display").innerText =
+          `${boss.name} (${boss.section})`;
+
+        // 2. Load Inventory (Iterator logic in backend)
+        const res = await fetch("/api/inventory/list");
+        const data = await res.json();
+        document.getElementById("inventory-table").innerHTML = data
+          .map(
+            (p) => `
+                <tr>
+                    <td><span class="id-badge">${p.id}</span></td>
+                    <td>${p.name}</td>
+                    <td class="${p.quantity <= p.threshold ? "low-text" : ""}">${p.quantity}</td>
+                    <td>${p.category}</td>
+                    <td><span class="storage-tag">${p.storage_type}</span></td>
+                </tr>
+            `,
+          )
+          .join("");
+        window.cachedData = data; // Store for analytics
+      }
+
+      function runAnalytics() {
+        const data = window.cachedData || [];
+        document.getElementById("stat-total").innerText = data.length;
+        document.getElementById("stat-low").innerText = data.filter(
+          (p) => p.quantity <= p.threshold,
+        ).length;
+      }
+
+      initialize();
+    </script>
+  </body>
+</html>
