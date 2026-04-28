@@ -14,6 +14,7 @@ import com.nexus.services.WarehouseLogger;
 public class MainApp {
     public static void main(String[] args) {
         DatabaseSeeder.uploadManagers();
+        DatabaseSeeder.uploadSuppliers();
         // 1. RUN THIS ONCE to fill your Firebase database with the CSV data
         // After you see "Cloud Sync SUCCESS" in the terminal, you can add // back to this line.
         DatabaseSeeder.uploadInventory(); 
@@ -26,7 +27,7 @@ public class MainApp {
         dispatcher.addObserver(new WarehouseLogger());
 
         InventoryService service = new InventoryService(dispatcher);
-        Product p = new Product("D001", "Elite Laptop", "Electronics", 2000, 2, 5, "Cairo", "Cold");
+        Product p = new Product("D001", "Elite Laptop", "Electronics", 2000, 2, 5, "Cairo", "Cold", "S01", "Nex Supply Cairo");
         service.updateStockInCloud(p);
         
         System.out.println("====================================================");
