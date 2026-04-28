@@ -20,6 +20,9 @@
           onclick="showPage('inventory')"
           >📦 Inventory Stock</a
         >
+        <a href="#" id="link-suppliers" onclick="showPage('suppliers')"
+          >🏷️ Suppliers</a
+        >
         <a href="#" id="link-hubs" onclick="showPage('hubs')"
           >🏭 Warehouse Hubs</a
         >
@@ -49,6 +52,7 @@
               <tr>
                 <th>ID</th>
                 <th>Product Name</th>
+                <th>Supplier</th>
                 <th>Stock</th>
                 <th>Category</th>
                 <th>Condition</th>
@@ -111,6 +115,35 @@
           </div>
         </div>
       </div>
+
+      <!-- SECTION 5: SUPPLIERS -->
+      <div id="view-suppliers" class="content-section" style="display: none">
+        <div class="table-container">
+          <h3>Suppliers</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Contact</th>
+                <th>Email</th>
+                <th>Branch</th>
+              </tr>
+            </thead>
+            <tbody id="suppliers-table"></tbody>
+          </table>
+
+          <h4>Add Supplier</h4>
+          <div>
+            <input id="sup-id" placeholder="ID (e.g. S04)" />
+            <input id="sup-name" placeholder="Name" />
+            <input id="sup-contact" placeholder="Contact" />
+            <input id="sup-email" placeholder="Email" />
+            <input id="sup-branch" placeholder="Branch" />
+            <button onclick="createSupplier()">Create</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script>
@@ -129,6 +162,7 @@
         // Update Title
         const titles = {
           inventory: "Inventory Stock",
+          suppliers: "Suppliers",
           hubs: "Warehouse Hubs",
           analytics: "System Analytics",
           config: "System Configuration",
@@ -136,6 +170,7 @@
         document.getElementById("page-title").innerText = titles[pageId];
 
         if (pageId === "analytics") runAnalytics();
+        if (pageId === "suppliers") loadSuppliers();
       }
 
       async function initialize() {
@@ -158,6 +193,7 @@
                 <tr>
                     <td><span class="id-badge">${p.id}</span></td>
                     <td>${p.name}</td>
+                    <td>${p.supplierName || p.supplierId || "-"}</td>
                     <td class="${p.quantity <= p.threshold ? "low-text" : ""}">${p.quantity}</td>
                     <td>${p.category}</td>
                     <td><span class="storage-tag">${p.storage_type}</span></td>
@@ -166,6 +202,45 @@
           )
           .join("");
         window.cachedData = data; // Store for analytics
+      }
+
+      async function loadSuppliers() {
+        const res = await fetch("/api/suppliers/list");
+        const data = await res.json();
+        document.getElementById("suppliers-table").innerHTML = data
+          .map(
+            (s) => `
+          <tr>
+            <td><span class="id-badge">${s.id}</span></td>
+            <td>${s.name}</td>
+            <td>${s.contact}</td>
+            <td>${s.email}</td>
+            <td>${s.branch}</td>
+          </tr>
+        `,
+          )
+          .join("");
+      }
+
+      async function createSupplier() {
+        const s = {
+          id: document.getElementById("sup-id").value.trim(),
+          name: document.getElementById("sup-name").value.trim(),
+          contact: document.getElementById("sup-contact").value.trim(),
+          email: document.getElementById("sup-email").value.trim(),
+          branch: document.getElementById("sup-branch").value.trim(),
+        };
+        if (!s.id) return alert("ID required");
+        const res = await fetch("/api/suppliers/create", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(s),
+        });
+        const txt = await res.text();
+        if (txt === "OK") {
+          alert("Supplier created");
+          loadSuppliers();
+        } else alert("Failed");
       }
 
       function runAnalytics() {
