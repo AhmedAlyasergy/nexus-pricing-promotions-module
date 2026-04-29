@@ -83,68 +83,52 @@ Adds +100 to total price.
 
 ## File Guide
 
-### src/main/java/com/nexus/pricing/controller/PricingController.java
+`src/main/java/com/nexus/pricing/controller/PricingController.java`
+Application REST controller responsible for handling pricing requests from frontend UI.
 
-REST controller responsible for handling pricing requests from frontend UI.
-
-### src/main/java/com/nexus/pricing/controller/PricingModule.java
-
+`src/main/java/com/nexus/pricing/controller/PricingModule.java`
 Main pricing module startup and integration class.
 
-### src/main/java/com/nexus/pricing/manager/PricingManager.java
-
+`src/main/java/com/nexus/pricing/manager/PricingManager.java`
 Coordinates strategies, decorators, and final price generation.
 
-### src/main/java/com/nexus/pricing/models/Order.java
-
+`src/main/java/com/nexus/pricing/models/Order.java`
 Represents customer pricing order information.
 
-### src/main/java/com/nexus/pricing/strategies/PricingStrategy.java
-
+`src/main/java/com/nexus/pricing/strategies/PricingStrategy.java`
 Common interface for all pricing strategies.
 
-### src/main/java/com/nexus/pricing/strategies/NormalPricing.java
-
+`src/main/java/com/nexus/pricing/strategies/NormalPricing.java`
 Returns normal product price.
 
-### src/main/java/com/nexus/pricing/strategies/VIPPricing.java
-
+`src/main/java/com/nexus/pricing/strategies/VIPPricing.java`
 Returns discounted VIP price.
 
-### src/main/java/com/nexus/pricing/strategies/BlackFridayPricing.java
-
+`src/main/java/com/nexus/pricing/strategies/BlackFridayPricing.java`
 Returns Black Friday promotional price.
 
-### src/main/java/com/nexus/pricing/decorators/PriceComponent.java
-
+`src/main/java/com/nexus/pricing/decorators/PriceComponent.java`
 Base component for decorator pricing structure.
 
-### src/main/java/com/nexus/pricing/decorators/BasePrice.java
-
+`src/main/java/com/nexus/pricing/decorators/BasePrice.java`
 Base product price object.
 
-### src/main/java/com/nexus/pricing/decorators/PriceDecorator.java
-
+`src/main/java/com/nexus/pricing/decorators/PriceDecorator.java`
 Abstract decorator wrapper.
 
-### src/main/java/com/nexus/pricing/decorators/GiftWrapDecorator.java
-
+`src/main/java/com/nexus/pricing/decorators/GiftWrapDecorator.java`
 Adds gift wrapping service fee.
 
-### src/main/java/com/nexus/pricing/decorators/InsuranceDecorator.java
-
+`src/main/java/com/nexus/pricing/decorators/InsuranceDecorator.java`
 Adds insurance service fee.
 
-### src/main/java/com/nexus/pricing/singleton/GlobalConfigManager.java
-
+`src/main/java/com/nexus/pricing/singleton/GlobalConfigManager.java`
 Singleton class holding shared tax and pricing configuration.
 
-### src/main/resources/static/index.html
-
+`src/main/resources/static/index.html`
 Main dashboard UI containing Pricing Engine integration.
 
-### src/main/resources/static/style.css
-
+`src/main/resources/static/style.css`
 Shared styling for full dashboard interface.
 
 ---
