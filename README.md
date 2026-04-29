@@ -1,6 +1,6 @@
- #Nexus Pricing & Promotions Module
+# Nexus Pricing & Promotions Module
 
-Nexus Pricing & Promotions Module is a Spring Boot pricing system integrated with the Inventory Module to calculate dynamic selling prices using pricing strategies, promotional add-ons, and shared tax rules.
+Nexus Pricing & Promotions Module is a Java Spring Boot pricing dashboard integrated with the Inventory Module for dynamic product pricing, promotions, and final cost calculation using modern design patterns.
 
 ---
 
@@ -8,150 +8,225 @@ Nexus Pricing & Promotions Module is a Spring Boot pricing system integrated wit
 
 ### Prerequisites
 
-- Java 17+
-- Maven
-- Firebase credentials file named `serviceAccountKey.json`
+* Java 17+
+* Maven
+* Firebase service account file named `serviceAccountKey.json` in project root
 
 ### Start the Application
 
 ```bash
 mvn -q -DskipTests compile
 mvn spring-boot:run
-Open the App
+```
+
+### Open the App
 
 Open in browser:
 
+```text
 http://localhost:8080/login.html
+```
 
-Then access Pricing Engine from the dashboard sidebar.
+Then open **Pricing Engine** from the dashboard sidebar.
 
-Module Features
-Load products dynamically from Inventory Module
-Display original product price
-Apply multiple pricing strategies
-Add optional promotions
-Calculate final price with tax included
-Reset pricing form instantly
-Pricing Strategies
-Normal Pricing
+---
 
-Uses standard product price.
+## Module Features
 
-VIP Pricing
+* Load products directly from Inventory Module
+* Show original base price instantly
+* Apply dynamic pricing strategies
+* Add promotional services
+* Calculate final price with tax
+* Reset pricing form instantly
+* Professional integrated dashboard UI
+
+---
+
+## Pricing Strategies
+
+### Normal Pricing
+
+Uses original product price.
+
+### VIP Pricing
 
 Applies 10% discount.
 
-Black Friday Pricing
+### Black Friday Pricing
 
 Applies 20% discount.
 
-Promotions
-Gift Wrap
+---
 
-Adds +50 to final cost.
+## Promotions
 
-Insurance
+### Gift Wrap
 
-Adds +100 to final cost.
+Adds +50 to total price.
 
-Final Pricing Formula
-Get base product price
-Apply selected pricing strategy
-Add selected promotional services
-Apply 14% tax
-File Guide
-src/main/java/com/nexus/pricing/controller/PricingController.java
+### Insurance
 
-REST API controller for pricing calculations.
+Adds +100 to total price.
 
-src/main/java/com/nexus/pricing/controller/PricingModule.java
+---
 
-Main pricing module execution class.
+## Final Calculation Logic
 
-src/main/java/com/nexus/pricing/manager/PricingManager.java
+1. Load selected product base price
+2. Apply selected strategy discount
+3. Add optional services
+4. Apply 14% tax
+5. Display final result
 
-Handles final price calculation flow.
+---
 
-src/main/java/com/nexus/pricing/strategies/PricingStrategy.java
+## File Guide
 
-Strategy interface for pricing behaviors.
+### src/main/java/com/nexus/pricing/controller/PricingController.java
 
-src/main/java/com/nexus/pricing/strategies/NormalPricing.java
+REST controller responsible for handling pricing requests from frontend UI.
 
-Standard pricing logic.
+### src/main/java/com/nexus/pricing/controller/PricingModule.java
 
-src/main/java/com/nexus/pricing/strategies/VipPricing.java
+Main pricing module startup and integration class.
 
-VIP discount pricing logic.
+### src/main/java/com/nexus/pricing/manager/PricingManager.java
 
-src/main/java/com/nexus/pricing/strategies/BlackFridayPricing.java
+Coordinates strategies, decorators, and final price generation.
 
-Black Friday discount logic.
+### src/main/java/com/nexus/pricing/models/Order.java
 
-src/main/java/com/nexus/pricing/decorators/GiftWrapDecorator.java
+Represents customer pricing order information.
 
-Adds gift wrap service cost.
+### src/main/java/com/nexus/pricing/strategies/PricingStrategy.java
 
-src/main/java/com/nexus/pricing/decorators/InsuranceDecorator.java
+Common interface for all pricing strategies.
 
-Adds insurance service cost.
+### src/main/java/com/nexus/pricing/strategies/NormalPricing.java
 
-src/main/resources/static/index.html
+Returns normal product price.
 
-Dashboard UI integrated with Pricing Engine.
+### src/main/java/com/nexus/pricing/strategies/VIPPricing.java
 
-Design Patterns Used
-Strategy Pattern
+Returns discounted VIP price.
 
-Used to switch pricing algorithms dynamically.
+### src/main/java/com/nexus/pricing/strategies/BlackFridayPricing.java
 
-NormalPricing
-VipPricing
-BlackFridayPricing
-Decorator Pattern
+Returns Black Friday promotional price.
 
-Used to add optional promotions without changing core pricing logic.
+### src/main/java/com/nexus/pricing/decorators/PriceComponent.java
 
-GiftWrapDecorator
-InsuranceDecorator
-Singleton Pattern
+Base component for decorator pricing structure.
 
-Used for shared system configuration such as tax values.
+### src/main/java/com/nexus/pricing/decorators/BasePrice.java
 
-SOLID Principles
-Single Responsibility Principle
+Base product price object.
 
-Each class handles one clear responsibility.
+### src/main/java/com/nexus/pricing/decorators/PriceDecorator.java
 
-Open/Closed Principle
+Abstract decorator wrapper.
 
-New strategies and promotions can be added without modifying existing code.
+### src/main/java/com/nexus/pricing/decorators/GiftWrapDecorator.java
 
-Liskov Substitution Principle
+Adds gift wrapping service fee.
 
-All pricing strategies can replace each other through the same interface.
+### src/main/java/com/nexus/pricing/decorators/InsuranceDecorator.java
 
-Interface Segregation Principle
+Adds insurance service fee.
 
-Small focused interfaces used for pricing logic.
+### src/main/java/com/nexus/pricing/singleton/GlobalConfigManager.java
 
-Dependency Inversion Principle
+Singleton class holding shared tax and pricing configuration.
 
-PricingManager depends on PricingStrategy abstraction.
+### src/main/resources/static/index.html
 
-Integration Notes
-Products are loaded from Inventory Module
-Pricing module runs inside the main dashboard
-Connected with the full Nexus Logistics system
-Author
+Main dashboard UI containing Pricing Engine integration.
+
+### src/main/resources/static/style.css
+
+Shared styling for full dashboard interface.
+
+---
+
+## Design Patterns Used
+
+### Strategy Pattern
+
+Used to switch pricing logic dynamically.
+
+* `NormalPricing`
+* `VIPPricing`
+* `BlackFridayPricing`
+
+### Decorator Pattern
+
+Used to add optional services without modifying core pricing code.
+
+* `GiftWrapDecorator`
+* `InsuranceDecorator`
+
+### Singleton Pattern
+
+Used for one shared configuration object.
+
+* `GlobalConfigManager`
+
+---
+
+## SOLID Principles in the Module
+
+### Single Responsibility Principle
+
+Each class has one main responsibility.
+
+* Strategies handle pricing rules only
+* Decorators handle add-ons only
+* Controller handles requests only
+
+### Open/Closed Principle
+
+System is open for extension without modifying old code.
+
+* New pricing strategies can be added easily
+* New promotions can be added easily
+
+### Liskov Substitution Principle
+
+Any pricing strategy can replace another through same interface.
+
+### Interface Segregation Principle
+
+Small focused interfaces used for pricing behavior.
+
+### Dependency Inversion Principle
+
+PricingManager depends on abstractions like `PricingStrategy`.
+
+---
+
+## Integration Notes
+
+* Products are loaded from Inventory Module
+* Pricing Engine works inside same dashboard
+* Shared styling keeps module visually integrated
+* Final system behaves as one logistics platform
+
+---
+
+## Author
 
 Ahmed Alyasergy
 
 Developer of Pricing & Promotions Module
 
-Future Enhancements
-Coupon codes
-Loyalty discounts
-Seasonal campaigns
-Multi-currency pricing
-Promotion analytics
+---
+
+## Future Enhancements
+
+* Coupon codes
+* Loyalty discounts
+* Seasonal campaigns
+* Multi-currency pricing
+* Revenue analytics
+* Smart AI promotions
