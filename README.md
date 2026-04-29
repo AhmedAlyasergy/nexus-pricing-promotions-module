@@ -135,26 +135,38 @@ Shared styling for full dashboard interface.
 
 ## Design Patterns Used
 
-### Strategy Pattern
+### Singleton
 
-Used to switch pricing logic dynamically.
+Used to keep one shared instance for pricing configuration across the system.
 
-* `NormalPricing`
-* `VIPPricing`
-* `BlackFridayPricing`
+* [`GlobalConfigManager`](src/main/java/com/nexus/pricing/singleton/GlobalConfigManager.java) stores tax rate and shared pricing settings.
+* Ensures one reusable configuration object for all pricing operations.
 
-### Decorator Pattern
+### Strategy
 
-Used to add optional services without modifying core pricing code.
+Used to switch pricing logic dynamically without changing core code.
 
-* `GiftWrapDecorator`
-* `InsuranceDecorator`
+* [`PricingStrategy`](src/main/java/com/nexus/pricing/strategies/PricingStrategy.java) is the common interface.
+* [`NormalPricing`](src/main/java/com/nexus/pricing/strategies/NormalPricing.java) applies standard pricing.
+* [`VIPPricing`](src/main/java/com/nexus/pricing/strategies/VIPPricing.java) applies VIP discount pricing.
+* [`BlackFridayPricing`](src/main/java/com/nexus/pricing/strategies/BlackFridayPricing.java) applies seasonal promotion pricing.
 
-### Singleton Pattern
+### Decorator
 
-Used for one shared configuration object.
+Used to add optional services to the base product price.
 
-* `GlobalConfigManager`
+* [`PriceComponent`](src/main/java/com/nexus/pricing/decorators/PriceComponent.java) is the base component.
+* [`BasePrice`](src/main/java/com/nexus/pricing/decorators/BasePrice.java) holds original product price.
+* [`GiftWrapDecorator`](src/main/java/com/nexus/pricing/decorators/GiftWrapDecorator.java) adds gift wrap fee.
+* [`InsuranceDecorator`](src/main/java/com/nexus/pricing/decorators/InsuranceDecorator.java) adds insurance fee.
+
+### MVC Structure
+
+Used to separate interface, logic, and request handling.
+
+* [`index.html`](src/main/resources/static/index.html) handles frontend view.
+* [`PricingController`](src/main/java/com/nexus/pricing/controller/PricingController.java) handles HTTP requests.
+* [`PricingManager`](src/main/java/com/nexus/pricing/manager/PricingManager.java) processes business logic.
 
 ---
 
