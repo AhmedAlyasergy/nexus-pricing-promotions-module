@@ -1,1 +1,16 @@
-serviceAccountKey.json 
+serviceAccountKey.json
+**/serviceAccountKey.json
+
+target/
+
+*.class
+*.log
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+hs_err_pid*
+replay_pid*
