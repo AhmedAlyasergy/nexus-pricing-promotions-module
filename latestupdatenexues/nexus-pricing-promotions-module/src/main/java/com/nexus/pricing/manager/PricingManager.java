@@ -6,6 +6,7 @@ import com.nexus.pricing.strategies.PricingStrategy;
 
 public class PricingManager {
 
+    private PricingStrategy pricingStrategy;
     public double calculateFinalPrice(Order order, PricingStrategy strategy) {
 
         double basePrice = order.getTotalBasePrice();
