@@ -37,6 +37,12 @@
   </dependencies>
 
   <build>
+    <sourceDirectory>latestupdatenexues/nexus-pricing-promotions-module/src/main/java</sourceDirectory>
+    <resources>
+      <resource>
+        <directory>latestupdatenexues/nexus-pricing-promotions-module/src/main/resources</directory>
+      </resource>
+    </resources>
     <plugins>
       <!-- THIS WAS MISSING: The plugin that runs the web server -->
       <plugin>
