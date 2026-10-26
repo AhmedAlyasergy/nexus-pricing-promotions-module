@@ -15,8 +15,8 @@ Nexus Pricing & Promotions Module is a Java Spring Boot pricing dashboard integr
 ### Start the Application
 
 ```bash
-mvn -q -DskipTests compile
-mvn spring-boot:run
+.\apache-maven-3.9.9\bin\mvn.cmd -q -DskipTests compile
+.\apache-maven-3.9.9\bin\mvn.cmd spring-boot:run
 ```
 
 ### Open the App
